@@ -27,7 +27,6 @@ startbutton = pygame.image.load(os.path.join(image_path, "startbutton.png"))
 startbutton_over = "startbuttonEntered.png"
 quitbutton_over = "quitbuttonEntered.png"
 quitbutton = pygame.image.load(os.path.join(image_path, "quitbutton.png"))
-startbutton = pygame.image.load(os.path.join(image_path, "startbutton.png"))
 startbutton_rect = startbutton.get_rect()
 startbutton_rect.top = 200
 startbutton_rect.left = 40
@@ -55,10 +54,23 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # when user click the close button
             running = False
-        
+        if event.type == pygame.MOUSEMOTION:
+            pos = pygame.mouse.get_pos()
+            if startbutton_rect.collidepoint(pos):
+                startbutton = pygame.image.load(os.path.join(image_path, "startbuttonEntered.png"))
+
+            if quitbutton_rect.collidepoint(pos):
+                quitbutton = pygame.image.load(os.path.join(image_path, "quitbuttonEntered.png"))
+
+            if not startbutton_rect.collidepoint(pos):
+                startbutton = pygame.image.load(os.path.join(image_path, "startbutton.png"))
+
+            if not quitbutton_rect.collidepoint(pos):
+                quitbutton = pygame.image.load(os.path.join(image_path, "quitbutton.png"))
+
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  #when user clicks 
             pos = pygame.mouse.get_pos()
-            print(pos);
+            
             if startbutton_rect.collidepoint(pos):
                 background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
                 start_game()
