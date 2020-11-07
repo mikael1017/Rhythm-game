@@ -41,12 +41,14 @@ exitbutton_rect.left = 5
 game_screen = False
 pygame.mixer.music.load(os.path.join(music_path,"introMusic.wav"))
 pygame.mixer.music.play()
+intro = True 
 
 def start_game():
-    pygame.mixer.music.stop()
-    pygame.mixer.music.load(os.path.join(music_path,"gameMusic.wav"))
-    pygame.mixer.music.play()
     global game_screen
+    if game_screen:
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load(os.path.join(music_path,"gameMusic.wav"))
+        pygame.mixer.music.play()
     while game_screen:        
         background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
         screen.blit(background, (0,0))
@@ -57,61 +59,66 @@ def start_game():
         
 
 #   event loop
-running = True 
-while running:
+
+def game_menu():
+    global intro
+    global game_screen
+    while intro:
+        
+        dt = clock.tick(60) #frame per second
+
+        # 2. Event handling (keyboard, mouse, etc)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: # when user click the close button
+                intro = False
+            if event.type == pygame.MOUSEMOTION:
+                pos = pygame.mouse.get_pos()
+                if startbutton_rect.collidepoint(pos):
+                    startbutton = pygame.image.load(os.path.join(image_path, "startbuttonEntered.png"))
+
+                if quitbutton_rect.collidepoint(pos):
+                    quitbutton = pygame.image.load(os.path.join(image_path, "quitbuttonEntered.png"))
+
+                if not startbutton_rect.collidepoint(pos):
+                    startbutton = pygame.image.load(os.path.join(image_path, "startbutton.png"))
+
+                if not quitbutton_rect.collidepoint(pos):
+                    quitbutton = pygame.image.load(os.path.join(image_path, "quitbutton.png"))
+                
+                if exitbutton_rect.collidepoint(pos):
+                    exitbutton = pygame.image.load(os.path.join(image_path, "exitEntered.png"))
+                if not exitbutton_rect.collidepoint(pos):
+                    exitbutton = pygame.image.load(os.path.join(image_path, "exit.png"))
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  #when user clicks 
+                pos = pygame.mouse.get_pos()
+                
+                if exitbutton_rect.collidepoint(pos):
+                    intro = False
+                if startbutton_rect.collidepoint(pos):
+                    game_screen = True
+                    #background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
+                    intro = False
+                if quitbutton_rect.collidepoint(pos):
+                    intro = False
+                    break
+
+
+        # 3. Character location
+        # 4. Collision handling
+        
+        # 5. Display it in window
+        screen.blit(background, (0, 0))
+        screen.blit(startbutton, (40, 200))
+        screen.blit(quitbutton, (40, 330))
+        screen.blit(exitbutton, (5, 5))
+
+        
+        
+
+        pygame.display.update()
     
-    dt = clock.tick(60) #frame per second
-
-    # 2. Event handling (keyboard, mouse, etc)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT: # when user click the close button
-            running = False
-        if event.type == pygame.MOUSEMOTION:
-            pos = pygame.mouse.get_pos()
-            if startbutton_rect.collidepoint(pos):
-                startbutton = pygame.image.load(os.path.join(image_path, "startbuttonEntered.png"))
-
-            if quitbutton_rect.collidepoint(pos):
-                quitbutton = pygame.image.load(os.path.join(image_path, "quitbuttonEntered.png"))
-
-            if not startbutton_rect.collidepoint(pos):
-                startbutton = pygame.image.load(os.path.join(image_path, "startbutton.png"))
-
-            if not quitbutton_rect.collidepoint(pos):
-                quitbutton = pygame.image.load(os.path.join(image_path, "quitbutton.png"))
-            
-            if exitbutton_rect.collidepoint(pos):
-                exitbutton = pygame.image.load(os.path.join(image_path, "exitEntered.png"))
-            if not exitbutton_rect.collidepoint(pos):
-                exitbutton = pygame.image.load(os.path.join(image_path, "exit.png"))
-
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  #when user clicks 
-            pos = pygame.mouse.get_pos()
-            
-            if exitbutton_rect.collidepoint(pos):
-                running = False
-            if startbutton_rect.collidepoint(pos):
-                #background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
-                game_screen = True
-                start_game()
-            if quitbutton_rect.collidepoint(pos):
-                running = False
-                break
-
-
-    # 3. Character location
-    # 4. Collision handling
-    
-    # 5. Display it in window
-    screen.blit(background, (0, 0))
-    screen.blit(startbutton, (40, 200))
-    screen.blit(quitbutton, (40, 330))
-    screen.blit(exitbutton, (5, 5))
-
-    
-    
-
-    pygame.display.update()
-
+game_menu()
+start_game()
 
 pygame.quit()
