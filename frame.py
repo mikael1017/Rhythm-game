@@ -42,21 +42,34 @@ game_screen = False
 pygame.mixer.music.load(os.path.join(music_path,"introMusic.wav"))
 pygame.mixer.music.play()
 intro = True 
+backbutton = pygame.image.load(os.path.join(image_path, "backbutton.png"))
 
 def start_game():
     global game_screen
+    backbutton = pygame.image.load(os.path.join(image_path, "backbutton.png"))
+    backbutton_rect = backbutton.get_rect()
+    backbutton_rect.top = 5
+    backbutton_rect.left = 5
     if game_screen:
         pygame.mixer.music.stop()
         pygame.mixer.music.load(os.path.join(music_path,"gameMusic.wav"))
         pygame.mixer.music.play()
     while game_screen:        
         background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
-        screen.blit(background, (0,0))
+        
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_screen = False
-        
+
+            if event.type == pygame.MOUSEMOTION:
+                pos = pygame.mouse.get_pos()
+                if backbutton_rect.collidepoint(pos):
+                    backbutton = pygame.image.load(os.path.join(image_path, "backbuttonEntered.png"))
+                if not backbutton_rect.collidepoint(pos):
+                    backbutton = pygame.image.load(os.path.join(image_path, "backbutton.png"))
+        screen.blit(background, (0,0))
+        screen.blit(backbutton, (5,5))
 
 #   event loop
 
