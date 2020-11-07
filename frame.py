@@ -27,22 +27,34 @@ startbutton = pygame.image.load(os.path.join(image_path, "startbutton.png"))
 startbutton_over = "startbuttonEntered.png"
 quitbutton_over = "quitbuttonEntered.png"
 quitbutton = pygame.image.load(os.path.join(image_path, "quitbutton.png"))
+exitbutton = pygame.image.load(os.path.join(image_path, "exit.png"))
+menubar = pygame.image.load(os.path.join(image_path, "menuBar.png"))
 startbutton_rect = startbutton.get_rect()
 startbutton_rect.top = 200
 startbutton_rect.left = 40
 quitbutton_rect = quitbutton.get_rect()
 quitbutton_rect.top = 330
 quitbutton_rect.left = 40
+exitbutton_rect = exitbutton.get_rect()
+exitbutton_rect.top = 5
+exitbutton_rect.left = 5
 game_screen = False
 pygame.mixer.music.load(os.path.join(music_path,"introMusic.wav"))
 pygame.mixer.music.play()
 
 def start_game():
-    background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
     pygame.mixer.music.stop()
     pygame.mixer.music.load(os.path.join(music_path,"gameMusic.wav"))
     pygame.mixer.music.play()
-    
+    global game_screen
+    while game_screen:        
+        background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
+        screen.blit(background, (0,0))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_screen = False
+        
 
 #   event loop
 running = True 
@@ -67,12 +79,20 @@ while running:
 
             if not quitbutton_rect.collidepoint(pos):
                 quitbutton = pygame.image.load(os.path.join(image_path, "quitbutton.png"))
+            
+            if exitbutton_rect.collidepoint(pos):
+                exitbutton = pygame.image.load(os.path.join(image_path, "exitEntered.png"))
+            if not exitbutton_rect.collidepoint(pos):
+                exitbutton = pygame.image.load(os.path.join(image_path, "exit.png"))
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  #when user clicks 
             pos = pygame.mouse.get_pos()
             
+            if exitbutton_rect.collidepoint(pos):
+                running = False
             if startbutton_rect.collidepoint(pos):
-                background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
+                #background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
+                game_screen = True
                 start_game()
             if quitbutton_rect.collidepoint(pos):
                 running = False
@@ -86,6 +106,7 @@ while running:
     screen.blit(background, (0, 0))
     screen.blit(startbutton, (40, 200))
     screen.blit(quitbutton, (40, 330))
+    screen.blit(exitbutton, (5, 5))
 
     
     
