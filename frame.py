@@ -38,7 +38,6 @@ quitbutton_rect.left = 40
 exitbutton_rect = exitbutton.get_rect()
 exitbutton_rect.top = 5
 exitbutton_rect.left = 5
-game_screen = False
 pygame.mixer.music.load(os.path.join(music_path,"introMusic.wav"))
 pygame.mixer.music.play()
 intro = True 
@@ -55,20 +54,20 @@ def music_change(music):
 def gameplay(level):
     global backbutton
     gameplay = True
+    title = pygame.image.load(os.path.join(image_path, "easyTitle.jpg"))
     if level == "easy":
             music_change("easyMusic")
 
     elif level == "medium":
         music_change("mediumMusic")
+        title = pygame.image.load(os.path.join(image_path, "mediumTitle.jpg"))
 
     else:
         music_change("hardMusic")
+        title = pygame.image.load(os.path.join(image_path, "hardTitle.jpg"))
+
     while gameplay:
         
-        
-        screen.blit(background, (0,0))
-        screen.blit(backbutton, (5,5))
-        pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameplay = False
@@ -81,11 +80,16 @@ def gameplay(level):
                 
                 if not backbutton_rect.collidepoint(pos):
                     backbutton = pygame.image.load(os.path.join(image_path, "backbutton.png"))
-                    
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if backbutton_rect.collidepoint(pos):
                     music_change("gameMusic")
                     gameplay = False
+    
+        screen.blit(background, (0,0))
+        screen.blit(backbutton, (5,5))
+        screen.blit(title, (340, 100))
+        pygame.display.update()
         
 
     
@@ -95,7 +99,7 @@ def gameplay(level):
 
 
 def start_game():
-    global game_screen
+    game_screen = True
     global backbutton
     background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
     easybutton = pygame.image.load(os.path.join(image_path, "easybutton.png"))
@@ -166,7 +170,6 @@ def start_game():
 
 def game_menu():
     global intro
-    global game_screen
     global startbutton
     global quitbutton
     global exitbutton
@@ -204,7 +207,6 @@ def game_menu():
                 if exitbutton_rect.collidepoint(pos):
                     intro = False
                 if startbutton_rect.collidepoint(pos):
-                    game_screen = True
                     start_game()
                 if quitbutton_rect.collidepoint(pos):
                     intro = False
