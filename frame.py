@@ -55,6 +55,12 @@ def gameplay(level):
     global backbutton
     gameplay = True
     title = pygame.image.load(os.path.join(image_path, "easyTitle.jpg"))
+    judgementline = pygame.image.load(os.path.join(image_path, "judgementline.png"))
+    hitbar = pygame.image.load(os.path.join(image_path, "hitbar.png"))
+    barpath = pygame.image.load(os.path.join(image_path, "barpath.png"))
+    barpathline = pygame.image.load(os.path.join(image_path, "barpathline.png"))
+    notebar = pygame.image.load(os.path.join(image_path, "bar.png"))
+
     if level == "easy":
             music_change("easyMusic")
 
@@ -89,6 +95,35 @@ def gameplay(level):
         screen.blit(background, (0,0))
         screen.blit(backbutton, (5,5))
         screen.blit(title, (340, 100))
+        
+        
+        screen.blit(barpath, (228,30))
+        screen.blit(barpath, (332,30))
+        screen.blit(barpath, (436,30))
+        screen.blit(barpath, (540,30))
+        screen.blit(barpath, (640,30))
+        screen.blit(barpath, (744,30))
+        screen.blit(barpath, (848,30))
+        screen.blit(barpath, (952,30))
+
+        screen.blit(barpathline, (224,30))
+        screen.blit(barpathline, (328,30))
+        screen.blit(barpathline, (432,30))
+        screen.blit(barpathline, (536,30))
+        screen.blit(barpathline, (740,30))
+        screen.blit(barpathline, (844,30))
+        screen.blit(barpathline, (948,30))
+        screen.blit(barpathline, (1052,30))
+        screen.blit(judgementline, (0,500))
+        screen.blit(hitbar, (0,660))
+        screen.blit(notebar, (228, 120))
+        screen.blit(notebar, (332, 580))
+        screen.blit(notebar, (436, 500))
+        screen.blit(notebar, (540, 340))
+        screen.blit(notebar, (640, 340))
+        screen.blit(notebar, (744, 325))
+        screen.blit(notebar, (848, 305))
+        screen.blit(notebar, (952, 305))
         pygame.display.update()
         
 
@@ -117,7 +152,6 @@ def start_game():
     music_change("gameMusic")
 
     while game_screen:        
-        
         
         
         for event in pygame.event.get():
