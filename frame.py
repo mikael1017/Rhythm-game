@@ -43,21 +43,79 @@ pygame.mixer.music.load(os.path.join(music_path,"introMusic.wav"))
 pygame.mixer.music.play()
 intro = True 
 backbutton = pygame.image.load(os.path.join(image_path, "backbutton.png"))
+backbutton_rect = backbutton.get_rect()
+backbutton_rect.top = 5
+backbutton_rect.left = 5
+
+def music_change(music):
+    pygame.mixer.music.stop()
+    pygame.mixer.music.load(os.path.join(music_path, music + ".wav"))
+    pygame.mixer.music.play()
+
+def gameplay(level):
+    global backbutton
+    gameplay = True
+    if level == "easy":
+            music_change("easyMusic")
+
+    elif level == "medium":
+        music_change("mediumMusic")
+
+    else:
+        music_change("hardMusic")
+    while gameplay:
+        
+        
+        screen.blit(background, (0,0))
+        screen.blit(backbutton, (5,5))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                gameplay = False
+                music_change("gameMusic")
+
+            if event.type == pygame.MOUSEMOTION:
+                pos = pygame.mouse.get_pos()
+                if backbutton_rect.collidepoint(pos):
+                    backbutton = pygame.image.load(os.path.join(image_path, "backbuttonEntered.png"))
+                
+                if not backbutton_rect.collidepoint(pos):
+                    backbutton = pygame.image.load(os.path.join(image_path, "backbutton.png"))
+                    
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if backbutton_rect.collidepoint(pos):
+                    music_change("gameMusic")
+                    gameplay = False
+        
+
+    
+
+    
+
+
 
 def start_game():
     global game_screen
-    backbutton = pygame.image.load(os.path.join(image_path, "backbutton.png"))
-    backbutton_rect = backbutton.get_rect()
-    backbutton_rect.top = 5
-    backbutton_rect.left = 5
-    if game_screen:
-        pygame.mixer.music.stop()
-        pygame.mixer.music.load(os.path.join(music_path,"gameMusic.wav"))
-        pygame.mixer.music.play()
+    global backbutton
+    background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
+    easybutton = pygame.image.load(os.path.join(image_path, "easybutton.png"))
+    mediumbutton = pygame.image.load(os.path.join(image_path, "mediumbutton.png"))
+    hardbutton = pygame.image.load(os.path.join(image_path, "hardbutton.png"))
+    easybutton_rect = easybutton.get_rect()
+    easybutton_rect.top = 100
+    easybutton_rect.left = 120
+    mediumbutton_rect = mediumbutton.get_rect()
+    mediumbutton_rect.top = 300
+    mediumbutton_rect.left = 120
+    hardbutton_rect = hardbutton.get_rect()
+    hardbutton_rect.top = 500
+    hardbutton_rect.left = 120
+    music_change("gameMusic")
+
     while game_screen:        
-        background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
         
-        pygame.display.update()
+        
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_screen = False
@@ -66,16 +124,52 @@ def start_game():
                 pos = pygame.mouse.get_pos()
                 if backbutton_rect.collidepoint(pos):
                     backbutton = pygame.image.load(os.path.join(image_path, "backbuttonEntered.png"))
+                
                 if not backbutton_rect.collidepoint(pos):
                     backbutton = pygame.image.load(os.path.join(image_path, "backbutton.png"))
+
+                if easybutton_rect.collidepoint(pos):
+                    easybutton = pygame.image.load(os.path.join(image_path, "easybuttonEntered.png"))
+                if not easybutton_rect.collidepoint(pos):
+                    easybutton = pygame.image.load(os.path.join(image_path, "easybutton.png"))
+
+                if mediumbutton_rect.collidepoint(pos):
+                    mediumbutton = pygame.image.load(os.path.join(image_path, "mediumbuttonEntered.png"))
+                if not mediumbutton_rect.collidepoint(pos):
+                    mediumbutton = pygame.image.load(os.path.join(image_path, "mediumbutton.png"))    
+            
+                if hardbutton_rect.collidepoint(pos):
+                    hardbutton = pygame.image.load(os.path.join(image_path, "hardbuttonEntered.png"))
+                if not hardbutton_rect.collidepoint(pos):
+                    hardbutton = pygame.image.load(os.path.join(image_path, "hardbutton.png"))
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                pos = pygame.mouse.get_pos()
+                if backbutton_rect.collidepoint(pos):
+                    game_screen = False
+                    music_change("introMusic")
+                if easybutton_rect.collidepoint(pos):
+                    gameplay("easy")
+                if mediumbutton_rect.collidepoint(pos):
+                    gameplay("medium")
+                if hardbutton_rect.collidepoint(pos):
+                    gameplay("hard")
+
         screen.blit(background, (0,0))
         screen.blit(backbutton, (5,5))
+        screen.blit(easybutton, (120, 100))
+        screen.blit(mediumbutton, (120, 300))
+        screen.blit(hardbutton, (120, 500))
+        pygame.display.update()
 
 #   event loop
 
 def game_menu():
     global intro
     global game_screen
+    global startbutton
+    global quitbutton
+    global exitbutton
     while intro:
         
         dt = clock.tick(60) #frame per second
@@ -100,6 +194,7 @@ def game_menu():
                 
                 if exitbutton_rect.collidepoint(pos):
                     exitbutton = pygame.image.load(os.path.join(image_path, "exitEntered.png"))
+
                 if not exitbutton_rect.collidepoint(pos):
                     exitbutton = pygame.image.load(os.path.join(image_path, "exit.png"))
 
@@ -110,28 +205,21 @@ def game_menu():
                     intro = False
                 if startbutton_rect.collidepoint(pos):
                     game_screen = True
-                    #background = pygame.image.load(os.path.join(image_path, "mainScreen.jpg"))
-                    intro = False
+                    start_game()
                 if quitbutton_rect.collidepoint(pos):
                     intro = False
                     break
 
-
         # 3. Character location
         # 4. Collision handling
-        
         # 5. Display it in window
         screen.blit(background, (0, 0))
         screen.blit(startbutton, (40, 200))
         screen.blit(quitbutton, (40, 330))
         screen.blit(exitbutton, (5, 5))
 
-        
-        
-
         pygame.display.update()
     
 game_menu()
-start_game()
 
 pygame.quit()
