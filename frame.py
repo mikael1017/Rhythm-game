@@ -78,7 +78,7 @@ def gameplay(level):
 
     screen.blit(background, (0,0))
     screen.blit(backbutton, (5,5))
-    screen.blit(title, (340, 100))
+    
 
     if level == "easy":
         music_change("easyMusic")
@@ -150,7 +150,7 @@ def gameplay(level):
                     space_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
     
         
-        
+        screen.blit(title, (340, 100))
         screen.blit(s_path, (228,30))
         screen.blit(d_path, (332,30))
         screen.blit(f_path, (436,30))
