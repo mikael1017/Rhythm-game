@@ -1,7 +1,7 @@
 import os
 import pygame
 #############################################
-#   Must have
+#   Screen measurement
 pygame.init() # reset 
 #   initialize the window
 screen_width = 1280 # x-axis
@@ -9,19 +9,17 @@ screen_height = 720 # y-axis
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 #   Title 
-pygame.display.set_caption("Pang game")
+pygame.display.set_caption("Rhythm Game")
 
 #   FPS
 clock = pygame.time.Clock()
 
 #############################################
-
-# 1. Background, Game image, Character, Position of image, Font
 current_path = os.path.dirname(__file__)    # current file path
 image_path = os.path.join(current_path, "images")
 music_path = os.path.join(current_path, "music")
 
-#   Background, Character, 
+#   Background 
 background = pygame.image.load(os.path.join(image_path, "background.jpg"))
 startbutton = pygame.image.load(os.path.join(image_path, "startbutton.png"))
 startbutton_over = "startbuttonEntered.png"
@@ -46,11 +44,13 @@ backbutton_rect = backbutton.get_rect()
 backbutton_rect.top = 5
 backbutton_rect.left = 5
 
+#   Stops current music that is being played and start a new song with file name equals to parameter
 def music_change(music):
     pygame.mixer.music.stop()
     pygame.mixer.music.load(os.path.join(music_path, music + ".wav"))
     pygame.mixer.music.play()
 
+#   Game play screen
 def gameplay(level):
     global backbutton
     gameplay = True
@@ -95,8 +95,7 @@ def gameplay(level):
         screen.blit(background, (0,0))
         screen.blit(backbutton, (5,5))
         screen.blit(title, (340, 100))
-        
-        
+
         screen.blit(barpath, (228,30))
         screen.blit(barpath, (332,30))
         screen.blit(barpath, (436,30))
@@ -114,7 +113,9 @@ def gameplay(level):
         screen.blit(barpathline, (844,30))
         screen.blit(barpathline, (948,30))
         screen.blit(barpathline, (1052,30))
+
         screen.blit(judgementline, (0,500))
+        
         screen.blit(hitbar, (0,660))
         screen.blit(notebar, (228, 120))
         screen.blit(notebar, (332, 580))
@@ -126,13 +127,7 @@ def gameplay(level):
         screen.blit(notebar, (952, 305))
         pygame.display.update()
         
-
-    
-
-    
-
-
-
+#   Game screen when user clicks start game button
 def start_game():
     game_screen = True
     global backbutton
@@ -200,8 +195,7 @@ def start_game():
         screen.blit(hardbutton, (120, 500))
         pygame.display.update()
 
-#   event loop
-
+#   First screen when this game is played
 def game_menu():
     global intro
     global startbutton
