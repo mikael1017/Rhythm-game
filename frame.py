@@ -43,11 +43,11 @@ backbutton = pygame.image.load(os.path.join(image_path, "backbutton.png"))
 backbutton_rect = backbutton.get_rect()
 backbutton_rect.top = 5
 backbutton_rect.left = 5
+black = (0,0,0)
 
-
-def display_text(message, x, y, size):
+def display_text(message, x, y, size, color):
     font = pygame.font.Font('freesansbold.ttf', size)
-    text = font.render(message, True, (0,0,0))
+    text = font.render(message, True, color)
     screen.blit(text, (x,y))
 
 #   Stops current music that is being played and start a new song with file name equals to parameter
@@ -66,20 +66,38 @@ def gameplay(level):
     barpath = pygame.image.load(os.path.join(image_path, "barpath.png"))
     barpathline = pygame.image.load(os.path.join(image_path, "barpathline.png"))
     notebar = pygame.image.load(os.path.join(image_path, "bar.png"))
+    s_path = barpath
+    d_path = barpath
+    f_path = barpath
+    j_path = barpath
+    k_path = barpath
+    l_path = barpath
+    space_path = barpath
+    score_txt = "0"
+    score = int(score_txt)
+
+    screen.blit(background, (0,0))
+    screen.blit(backbutton, (5,5))
+    screen.blit(title, (340, 100))
 
     if level == "easy":
-            music_change("easyMusic")
+        music_change("easyMusic")
+        display_text("Hep you out - Leonel Cassio", 18, 675, 30, (255,255,255))
+        display_text("Easy", 1200, 675, 30, (255,255,255))
 
     elif level == "medium":
         music_change("mediumMusic")
         title = pygame.image.load(os.path.join(image_path, "mediumTitle.jpg"))
-
+        display_text("Sun goes down - Roy Knox", 18, 675, 30, (255,255,255))
+        display_text("Medium", 1150, 675, 30, (255,255,255))
     else:
         music_change("hardMusic")
         title = pygame.image.load(os.path.join(image_path, "hardTitle.jpg"))
-
+        display_text("Lioness - Dayfox", 18, 675, 30, (255,255,255))
+        display_text("Hard", 1200, 675, 30, (255,255,255))
     while gameplay:
         
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameplay = False
@@ -97,19 +115,50 @@ def gameplay(level):
                 if backbutton_rect.collidepoint(pos):
                     music_change("gameMusic")
                     gameplay = False
-    
-        screen.blit(background, (0,0))
-        screen.blit(backbutton, (5,5))
-        screen.blit(title, (340, 100))
 
-        screen.blit(barpath, (228,30))
-        screen.blit(barpath, (332,30))
-        screen.blit(barpath, (436,30))
-        screen.blit(barpath, (540,30))
-        screen.blit(barpath, (640,30))
-        screen.blit(barpath, (744,30))
-        screen.blit(barpath, (848,30))
-        screen.blit(barpath, (952,30))
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s: 
+                    s_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                elif event.key == pygame.K_d:
+                    d_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                elif event.key == pygame.K_f:
+                    f_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                elif event.key == pygame.K_j:
+                    j_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                elif event.key == pygame.K_k:
+                    k_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                elif event.key == pygame.K_l:
+                    l_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                elif event.key == pygame.K_SPACE:
+                    space_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+            
+            if event.type == pygame.KEYUP:
+
+                if event.key == pygame.K_s: 
+                    s_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                elif event.key == pygame.K_d:
+                    d_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                elif event.key == pygame.K_f:
+                    f_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                elif event.key == pygame.K_j:
+                    j_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                elif event.key == pygame.K_k:
+                    k_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                elif event.key == pygame.K_l:
+                    l_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                elif event.key == pygame.K_SPACE:
+                    space_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+    
+        
+        
+        screen.blit(s_path, (228,30))
+        screen.blit(d_path, (332,30))
+        screen.blit(f_path, (436,30))
+        screen.blit(space_path, (540,30))
+        screen.blit(space_path, (640,30))
+        screen.blit(j_path, (744,30))
+        screen.blit(k_path, (848,30))
+        screen.blit(l_path, (952,30))
 
         screen.blit(barpathline, (224,30))
         screen.blit(barpathline, (328,30))
@@ -131,13 +180,16 @@ def gameplay(level):
         screen.blit(notebar, (744, 325))
         screen.blit(notebar, (848, 305))
         screen.blit(notebar, (952, 305))
-        display_text("S", 270, 586, 30)
-        display_text("D", 374, 586, 30)
-        display_text("F", 478, 586, 30)
-        display_text("Space Bar", 570, 586, 30)
-        display_text("J", 784, 586, 30)
-        display_text("K", 889, 586, 30)
-        display_text("L", 993, 586, 30)
+        display_text("S", 270, 586, 30, black)
+        display_text("D", 374, 586, 30, black)
+        display_text("F", 478, 586, 30, black)
+        display_text("Space Bar", 570, 586, 30, black)
+        display_text("J", 784, 586, 30, black)
+        display_text("K", 889, 586, 30, black)
+        display_text("L", 993, 586, 30, black)
+        display_text(score_txt, 640, 675, 30, (255,255,255))
+
+        display_text
         pygame.display.update()
         
 #   Game screen when user clicks start game button
