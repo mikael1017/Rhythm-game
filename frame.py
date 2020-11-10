@@ -44,6 +44,12 @@ backbutton_rect = backbutton.get_rect()
 backbutton_rect.top = 5
 backbutton_rect.left = 5
 
+
+def display_text(message, x, y, size):
+    font = pygame.font.Font('freesansbold.ttf', size)
+    text = font.render(message, True, (0,0,0))
+    screen.blit(text, (x,y))
+
 #   Stops current music that is being played and start a new song with file name equals to parameter
 def music_change(music):
     pygame.mixer.music.stop()
@@ -114,7 +120,7 @@ def gameplay(level):
         screen.blit(barpathline, (948,30))
         screen.blit(barpathline, (1052,30))
 
-        screen.blit(judgementline, (0,500))
+        screen.blit(judgementline, (0,580))
         
         screen.blit(hitbar, (0,660))
         screen.blit(notebar, (228, 120))
@@ -125,6 +131,13 @@ def gameplay(level):
         screen.blit(notebar, (744, 325))
         screen.blit(notebar, (848, 305))
         screen.blit(notebar, (952, 305))
+        display_text("S", 270, 586, 30)
+        display_text("D", 374, 586, 30)
+        display_text("F", 478, 586, 30)
+        display_text("Space Bar", 570, 586, 30)
+        display_text("J", 784, 586, 30)
+        display_text("K", 889, 586, 30)
+        display_text("L", 993, 586, 30)
         pygame.display.update()
         
 #   Game screen when user clicks start game button
@@ -147,8 +160,7 @@ def start_game():
     music_change("gameMusic")
 
     while game_screen:        
-        
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_screen = False
