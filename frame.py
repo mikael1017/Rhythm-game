@@ -44,6 +44,7 @@ backbutton_rect = backbutton.get_rect()
 backbutton_rect.top = 5
 backbutton_rect.left = 5
 black = (0,0,0)
+white = (255, 255, 255)
 
 def display_text(message, x, y, size, color):
     font = pygame.font.Font('freesansbold.ttf', size)
@@ -56,6 +57,21 @@ def music_change(music):
     pygame.mixer.music.load(os.path.join(music_path, music + ".wav"))
     pygame.mixer.music.play()
 
+def evaluate(location) -> String:
+    judge = 580
+    pos = abs(location)
+    result = ""
+    percent = float(pos / judge)
+    if percent >= 0.99 and percent <= 1.01:
+        return "Perfect"
+    elif percent <= 1.03 and percent >= 0.97:
+        return "Great"
+    elif percent <= 1.05 and percent >= 0.95:
+        return "Good"
+    elif percent <= 1.1 and percent >= 0.9:
+        return "Okay"
+    return "Miss"
+    
 #   Game play screen
 def gameplay(level):
     global backbutton
