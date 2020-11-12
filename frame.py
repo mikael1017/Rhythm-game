@@ -72,8 +72,6 @@ def evaluate(location):
         return "Okay"
     return "Miss"
 
-#   Game play screen
-
 class Notebar(object):
     def __init__(self, x_pos):
         self.x_pos = x_pos
@@ -94,10 +92,12 @@ class Notebar(object):
     def get_image(self):
         return self.image
 
+#   Game play screen
 def gameplay(level):
     global backbutton
-    note_speed = 7
+    note_speed = 3
     sleep_time = 10
+    reach_timme = 2
     gameplay = True
     title = pygame.image.load(os.path.join(image_path, "easyTitle.jpg"))
     judgementline = pygame.image.load(os.path.join(image_path, "judgementline.png"))
@@ -120,7 +120,12 @@ def gameplay(level):
     l_bar = Notebar(952) 
     space_bar1 = Notebar(540)
     space_bar2 = Notebar(640)
-    bars = [s_bar, d_bar, f_bar, j_bar, k_bar, l_bar, space_bar1, space_bar2]
+    easy_bpm = 98
+    medium_bpm = 148
+    hard_bpm = 110
+    notes = [s_bar, d_bar, f_bar, j_bar, k_bar, l_bar, space_bar1, space_bar2]
+    start_time = 1000
+
     
     score_txt = "0"
     score = int(score_txt)
@@ -133,6 +138,9 @@ def gameplay(level):
         music_change("easyMusic")
         display_text("Hep you out - Leonel Cassio", 18, 675, 30, (255,255,255))
         display_text("Easy", 1200, 675, 30, (255,255,255))
+        
+        
+        
 
     elif level == "medium":
         music_change("mediumMusic")
@@ -196,11 +204,6 @@ def gameplay(level):
                 elif event.key == pygame.K_SPACE:
                     space_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
 
-        for note in bars:
-            note.set_y(note.get_y() + note_speed)
-            if note.get_y() >= 620:  #   when it hits hitbar, location of hitbar - height of notebar
-                note.default()  #   set notebar to default y position; which is -40
-        
         screen.blit(title, (340, 100))
         screen.blit(s_path, (228,30))
         screen.blit(d_path, (332,30))
@@ -220,14 +223,13 @@ def gameplay(level):
         screen.blit(barpathline, (1052,30))
         screen.blit(judgementline, (0,580))
         screen.blit(hitbar, (0,660))
-        screen.blit(s_bar.get_image(), (s_bar.get_x(), s_bar.get_y()))
-        screen.blit(d_bar.get_image(), (d_bar.get_x(), d_bar.get_y()))
-        screen.blit(f_bar.get_image(), (f_bar.get_x(), f_bar.get_y()))
-        screen.blit(space_bar1.get_image(), (space_bar1.get_x(), space_bar1.get_y()))
-        screen.blit(space_bar2.get_image(), (space_bar2.get_x(), space_bar2.get_y()))
-        screen.blit(j_bar.get_image(), (j_bar.get_x(), j_bar.get_y()))
-        screen.blit(k_bar.get_image(), (k_bar.get_x(), k_bar.get_y()))
-        screen.blit(l_bar.get_image(), (l_bar.get_x(), l_bar.get_y()))
+
+        for note in notes:
+            note.set_y(note.get_y() + note_speed)
+            if note.get_y() >= 620:  #   when it hits hitbar, location of hitbar - height of notebar
+                note.default()  #   set notebar to default y position; which is -40
+            screen.blit(note.get_image(), (note.get_x(), note.get_y()))
+
         display_text("S", 270, 586, 30, black)
         display_text("D", 374, 586, 30, black)
         display_text("F", 478, 586, 30, black)
