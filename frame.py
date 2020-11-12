@@ -57,7 +57,7 @@ def music_change(music):
     pygame.mixer.music.load(os.path.join(music_path, music + ".wav"))
     pygame.mixer.music.play()
 
-def evaluate(location) -> String:
+def evaluate(location):
     judge = 580
     pos = abs(location)
     result = ""
@@ -71,11 +71,33 @@ def evaluate(location) -> String:
     elif percent <= 1.1 and percent >= 0.9:
         return "Okay"
     return "Miss"
-    
+
 #   Game play screen
+
+class Notebar(object):
+    def __init__(self, x_pos):
+        self.x_pos = x_pos
+        self.y_pos = -40
+        self.image = pygame.image.load(os.path.join(image_path, "bar.png"))
+    def set_y(self, y):
+        self.y_pos = y
+
+    def get_x(self):
+        return int(self.x_pos)
+
+    def get_y(self):
+        return int(self.y_pos)
+
+    def default(self):
+        self.set_y(-40)
+
+    def get_image(self):
+        return self.image
+
 def gameplay(level):
     global backbutton
-    bar_speed = 10
+    note_speed = 7
+    sleep_time = 10
     gameplay = True
     title = pygame.image.load(os.path.join(image_path, "easyTitle.jpg"))
     judgementline = pygame.image.load(os.path.join(image_path, "judgementline.png"))
@@ -90,13 +112,16 @@ def gameplay(level):
     k_path = barpath
     l_path = barpath
     space_path = barpath
-    s_bar = notebar
-    d_bar = notebar
-    f_bar = notebar
-    j_bar = notebar
-    k_bar = notebar
-    l_bar = notebar
-    space_bar = notebar
+    s_bar = Notebar(228)
+    d_bar = Notebar(332)
+    f_bar = Notebar(436)
+    j_bar = Notebar(744)
+    k_bar = Notebar(848)
+    l_bar = Notebar(952) 
+    space_bar1 = Notebar(540)
+    space_bar2 = Notebar(640)
+    bars = [s_bar, d_bar, f_bar, j_bar, k_bar, l_bar, space_bar1, space_bar2]
+    
     score_txt = "0"
     score = int(score_txt)
 
@@ -119,6 +144,7 @@ def gameplay(level):
         title = pygame.image.load(os.path.join(image_path, "hardTitle.jpg"))
         display_text("Lioness - Dayfox", 18, 675, 30, (255,255,255))
         display_text("Hard", 1200, 675, 30, (255,255,255))
+
     while gameplay:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -169,7 +195,11 @@ def gameplay(level):
                     l_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
                 elif event.key == pygame.K_SPACE:
                     space_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
-    
+
+        for note in bars:
+            note.set_y(note.get_y() + note_speed)
+            if note.get_y() >= 620:  #   when it hits hitbar, location of hitbar - height of notebar
+                note.default()  #   set notebar to default y position; which is -40
         
         screen.blit(title, (340, 100))
         screen.blit(s_path, (228,30))
@@ -190,14 +220,14 @@ def gameplay(level):
         screen.blit(barpathline, (1052,30))
         screen.blit(judgementline, (0,580))
         screen.blit(hitbar, (0,660))
-        screen.blit(s_bar, (228, 120))
-        screen.blit(d_bar, (332, 580))
-        screen.blit(f_bar, (436, 500))
-        screen.blit(space_bar, (540, 340))
-        screen.blit(space_bar, (640, 340))
-        screen.blit(j_bar, (744, 325))
-        screen.blit(k_bar, (848, 305))
-        screen.blit(l_bar, (952, 305))
+        screen.blit(s_bar.get_image(), (s_bar.get_x(), s_bar.get_y()))
+        screen.blit(d_bar.get_image(), (d_bar.get_x(), d_bar.get_y()))
+        screen.blit(f_bar.get_image(), (f_bar.get_x(), f_bar.get_y()))
+        screen.blit(space_bar1.get_image(), (space_bar1.get_x(), space_bar1.get_y()))
+        screen.blit(space_bar2.get_image(), (space_bar2.get_x(), space_bar2.get_y()))
+        screen.blit(j_bar.get_image(), (j_bar.get_x(), j_bar.get_y()))
+        screen.blit(k_bar.get_image(), (k_bar.get_x(), k_bar.get_y()))
+        screen.blit(l_bar.get_image(), (l_bar.get_x(), l_bar.get_y()))
         display_text("S", 270, 586, 30, black)
         display_text("D", 374, 586, 30, black)
         display_text("F", 478, 586, 30, black)
