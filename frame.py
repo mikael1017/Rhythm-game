@@ -131,7 +131,7 @@ def gameplay(level):
     score = int(score_txt)
 
     screen.blit(background, (0,0))
-    screen.blit(backbutton, (5,5))
+    
     
     #   If user clicks easy
     if level == "easy":
@@ -203,7 +203,7 @@ def gameplay(level):
                     l_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
                 elif event.key == pygame.K_SPACE:
                     space_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
-
+        screen.blit(backbutton, (5,5))
         screen.blit(title, (340, 100))
         screen.blit(s_path, (228,30))
         screen.blit(d_path, (332,30))
