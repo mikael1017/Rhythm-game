@@ -1,5 +1,7 @@
 import os
 import pygame
+from graphic import Notebar
+from graphic import Path
 #############################################
 #   Screen measurement
 pygame.init() # reset 
@@ -57,61 +59,56 @@ def music_change(music):
     pygame.mixer.music.load(os.path.join(music_path, music + ".wav"))
     pygame.mixer.music.play()
 
-def evaluate(location):
+def point(location):
     judge = 580
     pos = abs(location)
     result = ""
     percent = float(pos / judge)
+    print(percent)
     if percent >= 0.99 and percent <= 1.01:
         return "Perfect"
     elif percent <= 1.03 and percent >= 0.97:
         return "Great"
-    elif percent <= 1.05 and percent >= 0.95:
+    elif percent <= 1.035 and percent >= 0.965:
         return "Good"
-    elif percent <= 1.1 and percent >= 0.9:
+    elif percent <= 1.05 and percent >= 0.95:
         return "Okay"
     return "Miss"
 
-class Notebar(object):
-    def __init__(self, x_pos):
-        self.x_pos = x_pos
-        self.y_pos = -40
-        self.image = pygame.image.load(os.path.join(image_path, "bar.png"))
-    def set_y(self, y):
-        self.y_pos = y
+## input: judge_line judgementline
+def evaluate(path, note):
+    judgementline = pygame.image.load(os.path.join(image_path, "judgementline.png"))
+    result = ""
+    note_rect = note.get_image().get_rect()
+    note_rect.top = note.get_y()
+    note_rect.left = note.get_x()
 
-    def get_x(self):
-        return int(self.x_pos)
 
-    def get_y(self):
-        return int(self.y_pos)
-
-    def default(self):
-        self.set_y(-40)
-
-    def get_image(self):
-        return self.image
+    judge_line_rect = judgementline.get_rect()
+    judge_line_rect.top = 580
+    judge_line_rect.left = 0
+    result = point(note.get_y())
+    return result
 
 #   Game play screen
 def gameplay(level):
     global backbutton
-    note_speed = 3
+    note_speed = 2
     sleep_time = 10
     reach_timme = 2
     gameplay = True
     title = pygame.image.load(os.path.join(image_path, "easyTitle.jpg"))
     judgementline = pygame.image.load(os.path.join(image_path, "judgementline.png"))
     hitbar = pygame.image.load(os.path.join(image_path, "hitbar.png"))
-    barpath = pygame.image.load(os.path.join(image_path, "barpath.png"))
     barpathline = pygame.image.load(os.path.join(image_path, "barpathline.png"))
-    notebar = pygame.image.load(os.path.join(image_path, "bar.png"))
-    s_path = barpath
-    d_path = barpath
-    f_path = barpath
-    j_path = barpath
-    k_path = barpath
-    l_path = barpath
-    space_path = barpath
+    s_path = Path(228)
+    d_path = Path(332)
+    f_path = Path(436)
+    j_path = Path(744)
+    k_path = Path(848)
+    l_path = Path(952)
+    space_path1 = Path(540)
+    space_path2 = Path(640)
     s_bar = Notebar(228)
     d_bar = Notebar(332)
     f_bar = Notebar(436)
@@ -125,7 +122,6 @@ def gameplay(level):
     hard_bpm = 110
     notes = [s_bar, d_bar, f_bar, j_bar, k_bar, l_bar, space_bar1, space_bar2]
     start_time = 1000
-
     
     score_txt = "0"
     score = int(score_txt)
@@ -174,45 +170,49 @@ def gameplay(level):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s: 
-                    s_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                    s_path.entered()
+                    print(evaluate(s_path, s_bar))
                 elif event.key == pygame.K_d:
-                    d_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                    d_path.entered()
                 elif event.key == pygame.K_f:
-                    f_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                    f_path.entered()
                 elif event.key == pygame.K_j:
-                    j_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                    j_path.entered()
                 elif event.key == pygame.K_k:
-                    k_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                    k_path.entered()
                 elif event.key == pygame.K_l:
-                    l_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                    l_path.entered()
                 elif event.key == pygame.K_SPACE:
-                    space_path = pygame.image.load(os.path.join(image_path, "barpathEntered.png"))
+                    space_path1.entered()
+                    space_path2.entered()
             
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_s: 
-                    s_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                    s_path.default()
                 elif event.key == pygame.K_d:
-                    d_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                    d_path.default()
                 elif event.key == pygame.K_f:
-                    f_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                    f_path.default()
                 elif event.key == pygame.K_j:
-                    j_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                    j_path.default()
                 elif event.key == pygame.K_k:
-                    k_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                    k_path.default()
                 elif event.key == pygame.K_l:
-                    l_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                    l_path.default()
                 elif event.key == pygame.K_SPACE:
-                    space_path = pygame.image.load(os.path.join(image_path, "barpath.png"))
+                    space_path1.default()
+                    space_path2.default()
+
         screen.blit(backbutton, (5,5))
         screen.blit(title, (340, 100))
-        screen.blit(s_path, (228,30))
-        screen.blit(d_path, (332,30))
-        screen.blit(f_path, (436,30))
-        screen.blit(space_path, (540,30))
-        screen.blit(space_path, (640,30))
-        screen.blit(j_path, (744,30))
-        screen.blit(k_path, (848,30))
-        screen.blit(l_path, (952,30))
+        screen.blit(s_path.get_image(), (228,30))
+        screen.blit(d_path.get_image(), (332,30))
+        screen.blit(f_path.get_image(), (436,30))
+        screen.blit(space_path1.get_image(), (540,30))
+        screen.blit(space_path2.get_image(), (640,30))
+        screen.blit(j_path.get_image(), (744,30))
+        screen.blit(k_path.get_image(), (848,30))
+        screen.blit(l_path.get_image(), (952,30))
         screen.blit(barpathline, (224,30))
         screen.blit(barpathline, (328,30))
         screen.blit(barpathline, (432,30))
