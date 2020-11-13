@@ -127,8 +127,7 @@ def gameplay(level):
     score = int(score_txt)
 
     screen.blit(background, (0,0))
-    
-    
+
     #   If user clicks easy
     if level == "easy":
         music_change("easyMusic")
@@ -174,17 +173,23 @@ def gameplay(level):
                     print(evaluate(s_path, s_bar))
                 elif event.key == pygame.K_d:
                     d_path.entered()
+                    print(evaluate(s_path, d_bar))
                 elif event.key == pygame.K_f:
                     f_path.entered()
+                    print(evaluate(s_path, f_bar))
                 elif event.key == pygame.K_j:
                     j_path.entered()
+                    print(evaluate(s_path, j_bar))
                 elif event.key == pygame.K_k:
                     k_path.entered()
+                    print(evaluate(s_path, k_bar))
                 elif event.key == pygame.K_l:
                     l_path.entered()
+                    print(evaluate(s_path, l_bar))
                 elif event.key == pygame.K_SPACE:
                     space_path1.entered()
                     space_path2.entered()
+                    print(evaluate(s_path, space_bar1))
             
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_s: 
