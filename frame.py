@@ -7,8 +7,9 @@ from graphic import Path
 pygame.init() # reset 
 #   initialize the window
 screen_width = 1280 # x-axis
-screen_height = 720 # y-axis
+screen_height = 720 # y-axis 
 screen = pygame.display.set_mode((screen_width, screen_height))
+background_surface = pygame.Surface(screen.get_size())
 
 #   Title 
 pygame.display.set_caption("Rhythm Game")
@@ -47,11 +48,13 @@ backbutton_rect.top = 5
 backbutton_rect.left = 5
 black = (0,0,0)
 white = (255, 255, 255)
+score = 0
 
 def display_text(message, x, y, size, color):
     font = pygame.font.Font('freesansbold.ttf', size)
     text = font.render(message, True, color)
-    screen.blit(text, (x,y))
+    
+    background_surface.blit(text, (x,y))
 
 #   Stops current music that is being played and start a new song with file name equals to parameter
 def music_change(music):
@@ -60,39 +63,47 @@ def music_change(music):
     pygame.mixer.music.play()
 
 def point(location):
+    global score
     judge = 580
     pos = abs(location)
     result = ""
     percent = float(pos / judge)
-    print(percent)
+    # print(percent)
     if percent >= 0.99 and percent <= 1.01:
+        score += 100
         return "Perfect"
     elif percent <= 1.03 and percent >= 0.97:
+        score += 70
         return "Great"
     elif percent <= 1.035 and percent >= 0.965:
+        score += 50
         return "Good"
-    elif percent <= 1.05 and percent >= 0.95:
+    elif percent <= 1.055 and percent >= 0.945:
+        score += 30
         return "Okay"
     return "Miss"
 
 ## input: judge_line judgementline
 def evaluate(path, note):
+    global score
     judgementline = pygame.image.load(os.path.join(image_path, "judgementline.png"))
     result = ""
     note_rect = note.get_image().get_rect()
     note_rect.top = note.get_y()
     note_rect.left = note.get_x()
-
-
     judge_line_rect = judgementline.get_rect()
     judge_line_rect.top = 580
     judge_line_rect.left = 0
-    result = point(note.get_y())
+    if note_rect.colliderect(judge_line_rect):
+        result = point(note.get_y())
+    pygame.display.update()
     return result
 
 #   Game play screen
 def gameplay(level):
     global backbutton
+    global score
+    score = 0
     note_speed = 2
     sleep_time = 10
     reach_timme = 2
@@ -123,10 +134,7 @@ def gameplay(level):
     notes = [s_bar, d_bar, f_bar, j_bar, k_bar, l_bar, space_bar1, space_bar2]
     start_time = 1000
     
-    score_txt = "0"
-    score = int(score_txt)
-
-    screen.blit(background, (0,0))
+    background_surface.blit(background, (0,0))
 
     #   If user clicks easy
     if level == "easy":
@@ -135,8 +143,6 @@ def gameplay(level):
         display_text("Easy", 1200, 675, 30, (255,255,255))
         
         
-        
-
     elif level == "medium":
         music_change("mediumMusic")
         title = pygame.image.load(os.path.join(image_path, "mediumTitle.jpg"))
@@ -208,33 +214,32 @@ def gameplay(level):
                     space_path1.default()
                     space_path2.default()
 
-        screen.blit(backbutton, (5,5))
-        screen.blit(title, (340, 100))
-        screen.blit(s_path.get_image(), (228,30))
-        screen.blit(d_path.get_image(), (332,30))
-        screen.blit(f_path.get_image(), (436,30))
-        screen.blit(space_path1.get_image(), (540,30))
-        screen.blit(space_path2.get_image(), (640,30))
-        screen.blit(j_path.get_image(), (744,30))
-        screen.blit(k_path.get_image(), (848,30))
-        screen.blit(l_path.get_image(), (952,30))
-        screen.blit(barpathline, (224,30))
-        screen.blit(barpathline, (328,30))
-        screen.blit(barpathline, (432,30))
-        screen.blit(barpathline, (536,30))
-        screen.blit(barpathline, (740,30))
-        screen.blit(barpathline, (844,30))
-        screen.blit(barpathline, (948,30))
-        screen.blit(barpathline, (1052,30))
-        screen.blit(judgementline, (0,580))
-        screen.blit(hitbar, (0,660))
+        background_surface.blit(backbutton, (5,5))
+        background_surface.blit(title, (340, 100))
+        background_surface.blit(s_path.get_image(), (228,30))
+        background_surface.blit(d_path.get_image(), (332,30))
+        background_surface.blit(f_path.get_image(), (436,30))
+        background_surface.blit(space_path1.get_image(), (540,30))
+        background_surface.blit(space_path2.get_image(), (640,30))
+        background_surface.blit(j_path.get_image(), (744,30))
+        background_surface.blit(k_path.get_image(), (848,30))
+        background_surface.blit(l_path.get_image(), (952,30))
+        background_surface.blit(barpathline, (224,30))
+        background_surface.blit(barpathline, (328,30))
+        background_surface.blit(barpathline, (432,30))
+        background_surface.blit(barpathline, (536,30))
+        background_surface.blit(barpathline, (740,30))
+        background_surface.blit(barpathline, (844,30))
+        background_surface.blit(barpathline, (948,30))
+        background_surface.blit(barpathline, (1052,30))
+        background_surface.blit(judgementline, (0,580))
+        background_surface.blit(hitbar, (0,660))
 
         for note in notes:
             note.set_y(note.get_y() + note_speed)
             if note.get_y() >= 620:  #   when it hits hitbar, location of hitbar - height of notebar
                 note.default()  #   set notebar to default y position; which is -40
-            screen.blit(note.get_image(), (note.get_x(), note.get_y()))
-
+            background_surface.blit(note.get_image(), (note.get_x(), note.get_y()))
         display_text("S", 270, 586, 30, black)
         display_text("D", 374, 586, 30, black)
         display_text("F", 478, 586, 30, black)
@@ -242,7 +247,8 @@ def gameplay(level):
         display_text("J", 784, 586, 30, black)
         display_text("K", 889, 586, 30, black)
         display_text("L", 993, 586, 30, black)
-        display_text(score_txt, 640, 675, 30, (255,255,255))
+        display_text(f"{score}", 640, 675, 30, (255,255,255))
+        screen.blit(background_surface, (0,0))
         pygame.display.update()
         
 #   Game screen when user clicks start game button
@@ -305,11 +311,12 @@ def start_game():
                 if hardbutton_rect.collidepoint(pos):
                     gameplay("hard")
 
-        screen.blit(background, (0,0))
-        screen.blit(backbutton, (5,5))
-        screen.blit(easybutton, (120, 100))
-        screen.blit(mediumbutton, (120, 300))
-        screen.blit(hardbutton, (120, 500))
+        background_surface.blit(background, (0,0))
+        background_surface.blit(backbutton, (5,5))
+        background_surface.blit(easybutton, (120, 100))
+        background_surface.blit(mediumbutton, (120, 300))
+        background_surface.blit(hardbutton, (120, 500))
+        screen.blit(background_surface, (0,0))
         pygame.display.update()
 
 #   First screen when this game is played
@@ -358,10 +365,11 @@ def game_menu():
                     break
 
         # 5. Display it in window
-        screen.blit(background, (0, 0))
-        screen.blit(startbutton, (40, 200))
-        screen.blit(quitbutton, (40, 330))
-        screen.blit(exitbutton, (5, 5))
+        background_surface.blit(background, (0, 0))
+        background_surface.blit(startbutton, (40, 200))
+        background_surface.blit(quitbutton, (40, 330))
+        background_surface.blit(exitbutton, (5, 5))
+        screen.blit(background_surface, (0,0))
 
         pygame.display.update()
     
